@@ -1,0 +1,56 @@
+#include <bits/stdc++.h>  
+using namespace std;  
+// Function for Merge two arrays in unsorted manner
+void sortedMerge(int a[], int b[], int res[],  
+    int n, int m)   
+{  
+    sort(a, a + n); // sorting array a   
+    sort(b, b + m); // sorting array b   
+  
+  
+    int i = 0, j = 0, k = 0; 
+    // After sorting, compare and merge elements to third array
+    while (i < n && j < m) {    
+        if (a[i] <= b[j]) {    
+            res[k] = a[i];    
+            i += 1;  
+            k += 1;  
+        } 
+        else 
+        {
+            // otherwise putting the elements of b into res array and incrementing j
+            res[k] = b[j]; 
+            j += 1;  
+            k += 1;  
+        }  
+    } 
+    // If array a elements are left putting them in res 
+    while (i < n) {  
+        res[k] = a[i];  
+        i += 1;  
+        k += 1;  
+    }  
+    while (j < m) { // If array b elements are left putting them in res  
+        res[k] = b[j];  
+        j += 1;  
+        k += 1;  
+    }  
+}  
+  
+int main()  
+{  
+    int a[] = { 50, 95, 35, 12, 100 };  
+    int b[] = { 10, 43, 23, 33, 9, 17 };  
+    int n = sizeof(a) / sizeof(a[0]); // find the size of array a  
+    int m = sizeof(b) / sizeof(b[0]); // find the size of array b  
+  
+    int res[n + m]; // create res array to Concatenate both the array  
+    sortedMerge(a, b, res, n, m); // call function to append and sort  
+  
+    cout << "The sorted array is: ";  
+    for (int i = 0; i < n + m; i++)  
+        cout << " " << res[i];  
+    cout << "\n";  
+  
+    return 0;  
+}  
