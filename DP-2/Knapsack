@@ -1,0 +1,118 @@
+A thief robbing a store and can carry a maximal weight of W into his knapsack.
+There are N items and ith item weigh wi and is value vi. What is the maximum value V, that thief can take ?
+
+
+#include<cmath>
+
+//brute force 
+
+int knapsack(int* weights, int* values, int n, int maxWeight){
+	
+   if(n==0 || maxWeight==0)
+        return 0;
+    
+  if(weights[0]>maxWeight)
+        return knapsack(weights+1,values+1, n-1,maxWeight);
+    
+     else
+        return max(values[0]+knapsack(weights+1,values+1,n-1,maxWeight-weights[0]),knapsack(weights+1,values+1,n-1,maxWeight));
+    
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------
+// memorization
+
+#include <iostream>
+#include<bits/stdc++.h>
+using namespace std;
+
+int knapsack(int* weights, int* values, int n, int maxWeight, int  dp[101][21]){
+
+    
+    
+    if(n==0 || maxWeight==0)
+        return 0;
+    if(dp[maxWeight][n]!=-1)
+        return dp[maxWeight][n];
+  if(weights[0]>maxWeight)
+        return dp[maxWeight][n]=dp[maxWeight][n]= knapsack(weights+1,values+1, n-1,maxWeight,dp);
+    
+     else
+        return dp[maxWeight][n]=dp[maxWeight][n]=max(values[0]+knapsack(weights+1,values+1,n-1,maxWeight-weights[0],dp),
+                   knapsack(weights+1,values+1,n-1,maxWeight,dp));
+}
+int main() {
+	int n; 
+	cin >> n;
+	int dp[101][21];
+         memset ( dp, -1 , sizeof(dp));
+	int* weights = new int[n];
+	int* values = new int[n];
+
+	for(int i = 0; i < n; i++){
+		cin >> weights[i];
+	}
+
+	for(int i = 0; i < n; i++){
+		cin >> values[i];
+	}
+
+	int maxWeight;
+	cin >> maxWeight;
+
+	cout << knapsack(weights, values, n, maxWeight,dp) << endl;
+}   
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+// dp soln  space complexity O(N*W)
+int knapsack(int* wt, int* values, int n, int W)
+{   int dp[n+1][W+1];
+	 for(int i =0 ; i<=n ;i++)
+		 { for(int j=0 ;j<=W ;j++)
+			 {
+ 			    if( i==0 || j== 0)
+ 			        dp[i][j]=0;
+ 			    else
+ 			    {  if(wt[i-1]>j)
+ 		  	         dp[i][j]  = dp[i-1][j];
+ 			        else
+ 			         dp[i][j]= max( values[i-1] + dp[i-1][j-wt[i-1]], dp[i-1][j]) ; 
+ 			    }
+			 }
+		 }
+ return dp[n][W];
+}
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+// dp solution
+
+int knapsack(int* w, int* v, int n, int max_weight)
+{
+	int* zero = new int[max_weight + 1];
+	int* one = new int[max_weight + 1];
+	for (int i = 0; i < max_weight + 1; i++)
+	{
+		zero[i] = 0;
+		one[i] = 0;
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= max_weight; j++)
+		{
+			if (j - w[i - 1] >= 0)
+			{
+				one[j] = max(zero[j], v[i - 1] + zero[j - w[i - 1]]);
+			}
+			else
+			{
+				one[j] = zero[j];
+			}
+		}
+
+		for (int j = 0; j <= max_weight; j++)
+		{
+			zero[j] = one[j];
+			one[j] = 0;
+		}
+	}
+	return zero[max_weight];
+}
